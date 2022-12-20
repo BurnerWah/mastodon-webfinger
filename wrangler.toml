@@ -1,3 +1,14 @@
 name = "mastodon-webfinger"
 main = "src/index.ts"
 compatibility_date = "2022-11-12"
+workers_dev = false
+
+[[kv_namespaces]]
+binding = "ACCOUNTS"
+id = "146ac3b5532246bd8f0908556baafac2"
+preview_id = "146ac3b5532246bd8f0908556baafac2"
+
+[[kv_namespaces]]
+binding = "HOST_INFO"
+id = "bdc1974579ea44a9991fbd11601325cb"
+preview_id = "bdc1974579ea44a9991fbd11601325cb"

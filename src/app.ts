@@ -34,7 +34,9 @@ app.get(
     }
 
     const { ACCOUNTS, HOST_INFO } = ctx.env
-    const account = await ACCOUNTS.get(`${fingerUsername}@${fingerHost}`)
+    const account = await ACCOUNTS.get(`${fingerUsername}@${fingerHost}`).then(
+      async (a) => a || (await ACCOUNTS.get(`*@${fingerHost}`)),
+    )
     if (account) {
       const accountInfo = JSON.parse(account) as Account
       const hostInfo = (await HOST_INFO.get(

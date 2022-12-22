@@ -1,0 +1,41 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/wrangler.yml
+      - src/**
+      - wrangler.toml
+      - tsconfig.json
+      - package.json
+      - package-lock.json # NPM lockfile
+      - yarn.lock # Yarn lockfile
+      - pnpm-lock.yaml # PNPM lockfile
+      - bun.lockb # Bun lockfile (bun.sh)
+      - ultra.lock # Ultra lockfile (ultrapkg.dev)
+
+# This allows a subsequently queued workflow run to interrupt previous runs
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: npm
+
+      - run: npm install
+
+      - name: Publish
+        uses: cloudflare/wrangler-action@2.0.0
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
